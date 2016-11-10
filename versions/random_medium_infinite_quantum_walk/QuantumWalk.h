@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-const long iter = 2048;//1048576;
+const long iter = 1048576;
 
 class QuantumWalk {
 public:
@@ -24,13 +24,11 @@ public:
     void flush();
     std::vector<double> log_x;
     std::vector<double> log_t;
-    void print_norm_array(double src_r[], double src_i[]);
     void print_norm_array();
-    void print_amplitude_array();
-    void write_norm_array(std::ofstream & file);
-    void write_statistics(std::ofstream & file);
-    void write_statistics(std::ofstream & file, bool log_time);
-    void print_statistics();
+    void write_time(std::ofstream & file, bool endl);
+    void write_norm_array(std::ofstream & file, bool endl);
+    void write_mds(std::ofstream & file, bool endl);
+    double norm_sum();
 private:
     long _t = 0;
     double _time_step = 1;

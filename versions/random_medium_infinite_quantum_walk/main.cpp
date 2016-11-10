@@ -25,9 +25,9 @@ int main() {
     std::string description = "";
     std::cout << "Please enter description:\n> ";
     getline(std::cin, description);
-    std::string filepath = "./outlog/rand_";
+    std::string filepath = "./outlog/randinf_";
     std::cout << filepath + filename + ".csv" << std::endl;
-    outputfile.open ((filepath + filename + ".csv").c_str());
+    outputfile.open((filepath + filename + ".csv").c_str());
     outputfile << "description\t" << description << std::endl;
 
 //    //check runtime of simulation
@@ -56,18 +56,20 @@ int main() {
 //    std::cout << "Sec: " << secs<< std::endl;
 //
 //    //write statistics and close file
-//    quantumWalk.write_norm_array(outputfile);
+//    quantumWalk.write_norm_array(outputfile, true);
 //    outputfile.close();
 //    return 0;
 
     //routine for logging
     QuantumWalk quantumWalk;
-    for(int i=0; i<84; i++){
+    for(int i=0; i<1; i++){
         std::cout << "run: " << i << std::endl;
         quantumWalk.generate_matrix_array();
         quantumWalk.run_simulation();
-        if(i==0) quantumWalk.write_statistics(outputfile, true);
-        else quantumWalk.write_statistics(outputfile, false);
+//        if(i==0) quantumWalk.write_statistics(outputfile, true);
+//        else quantumWalk.write_statistics(outputfile, false);
+        if(i==0) quantumWalk.write_time(outputfile, true);
+        quantumWalk.write_norm_array(outputfile, false);
         quantumWalk.flush();
     }
     outputfile.close();
