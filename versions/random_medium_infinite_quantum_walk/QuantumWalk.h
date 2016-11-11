@@ -11,16 +11,17 @@
 #include <iostream>
 #include <fstream>
 
-const long iter = 1048576;
+const long iter = 1048576; //32768;
 
 class QuantumWalk {
 public:
     QuantumWalk();
     QuantumWalk(double ur, double ui, double lr, double li);
     unsigned long iterations = iter;
-    void run_simulation();
-    void generate_statistics(double src_r[], double src_i[]);
+    void run_simulation(std::ofstream & file);
+    void generate_statistics(std::ofstream & file);
     void generate_matrix_array();
+//    void generate_ultrametric_matrix_array(double e);
     void flush();
     std::vector<double> log_x;
     std::vector<double> log_t;

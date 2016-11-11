@@ -9,7 +9,8 @@
  */
 //todo make arrays 2x shorter, using constance of zeros
 
-std::ofstream outputfile;
+std::ofstream mdsfile;
+std::ofstream nfile;
 static unsigned long long get_timestamp () {
     struct timeval now;
     gettimeofday (&now, NULL);
@@ -27,8 +28,11 @@ int main() {
     getline(std::cin, description);
     std::string filepath = "./outlog/randinf_";
     std::cout << filepath + filename + ".csv" << std::endl;
-    outputfile.open((filepath + filename + ".csv").c_str());
-    outputfile << "description\t" << description << std::endl;
+    mdsfile.open((filepath + filename + ".csv").c_str());
+    mdsfile << "description\t" << description << std::endl;
+    nfile.open((filepath + filename + "_norm.csv").c_str());
+    nfile << "description\t" << description << std::endl;
+    nfile << "header, t, norm array" << std::endl;
 
 //    //check runtime of simulation
 //    unsigned long long t0 = get_timestamp();
@@ -41,8 +45,8 @@ int main() {
 //    std::cout << "Sec: " << secs<< std::endl;
 
 //    //write statistics and close file
-//    quantumWalk.write_statistics(outputfile);
-//    outputfile.close();
+//    quantumWalk.write_statistics(mdsfile);
+//    mdsfile.close();
 //    return 0;
 
 //    //check runtime of simulation
@@ -56,8 +60,8 @@ int main() {
 //    std::cout << "Sec: " << secs<< std::endl;
 //
 //    //write statistics and close file
-//    quantumWalk.write_norm_array(outputfile, true);
-//    outputfile.close();
+//    quantumWalk.write_norm_array(mdsfile, true);
+//    mdsfile.close();
 //    return 0;
 
     //routine for logging
@@ -65,13 +69,13 @@ int main() {
     for(int i=0; i<1; i++){
         std::cout << "run: " << i << std::endl;
         quantumWalk.generate_matrix_array();
-        quantumWalk.run_simulation();
-//        if(i==0) quantumWalk.write_statistics(outputfile, true);
-//        else quantumWalk.write_statistics(outputfile, false);
-        if(i==0) quantumWalk.write_time(outputfile, true);
-        quantumWalk.write_norm_array(outputfile, false);
+        quantumWalk.run_simulation(nfile);
+//        if(i==0) quantumWalk.write_statistics(mdsfile, true);
+//        else quantumWalk.write_statistics(mdsfile, false);
+        if(i==0) quantumWalk.write_time(mdsfile, true);
+        quantumWalk.write_mds(mdsfile, true);
         quantumWalk.flush();
     }
-    outputfile.close();
+    mdsfile.close();
     return 0;
 }

@@ -90,7 +90,7 @@ void QuantumWalk::flush() {
     this->log_t.clear();
 }
 
-void QuantumWalk::run_simulation() {
+void QuantumWalk::run_simulation(std::ofstream & file) {
     long iter = this->iterations;
     long t = this->_t;
     double* mat = this->mat;
@@ -130,7 +130,7 @@ void QuantumWalk::run_simulation() {
         if(this->log_cond(t)) {
             //this->print_norm_array(); //calling this method is very slow and freezes clion for large t due to the lag of printing to console
             std::cout << "\tnsum:\t"<< this->norm_sum() << std::endl;
-            this->generate_statistics(dest_r, dest_i);
+            this->generate_statistics(file);
         }
     }
 }
@@ -159,27 +159,31 @@ double QuantumWalk::norm_sum(){
     return sum;
 }
 
-void QuantumWalk::generate_statistics(double src_r[], double src_i[]){
+void QuantumWalk::generate_statistics(std::ofstream & file){
     double x = 0.0;
     double y,t;
     double c = 0.0;
     long T = this->_t;
     long iter = this->iterations;
+    double * src_r; double * src_i;
+    if(T%2==0){src_r  = A_r; src_i  = A_i;} else { src_r  = B_r; src_i  = B_i;}
     double norm;
     double pos;
-    long X=-(T+1)+1;
+    long X=-T;
     long i;
-    for(; X <= (T+1); X+=2){
+    for(; X <= T; X+=2){
         i = 2*(iter+X);
         pos = X;
         norm = (src_r[i]*src_r[i]+src_i[i]*src_i[i])
                +(src_r[i+1]*src_r[i+1]+src_i[i+1]*src_i[i+1]);
         // Kahan Summation Algorithm: reduces rounding errors in low order bits
+        file << norm << ",";
         y = (norm * pos * pos) - c;
         t = x + y;
         c = (t - x) - y;
         x = t;
     }
+    file << std::endl;
     this->log_x.push_back(x);
     this->log_t.push_back(T);
     std::cout << "\tgenerating statistics\t(x2,t)->\t(" << x << ", " << T <<")"<< std::endl;
