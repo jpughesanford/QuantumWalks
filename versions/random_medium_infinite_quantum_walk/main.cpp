@@ -66,7 +66,7 @@ int main() {
 
     //routine for logging
     QuantumWalk quantumWalk;
-    for(int i=0; i<1; i++){
+    for(int i=0; i<200; i++){
         std::cout << "run: " << i << std::endl;
         quantumWalk.generate_matrix_array();
         quantumWalk.run_simulation(nfile);

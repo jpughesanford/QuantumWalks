@@ -126,7 +126,7 @@ void QuantumWalk::run_simulation(std::ofstream & file) {
             }
         }
         //update variables
-        this->_t = t = t + this->_time_step;
+        this->_t = ++t;
         if(this->log_cond(t)) {
             //this->print_norm_array(); //calling this method is very slow and freezes clion for large t due to the lag of printing to console
             std::cout << "\tnsum:\t"<< this->norm_sum() << std::endl;
