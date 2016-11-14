@@ -84,30 +84,39 @@ int main() {
     UltraQuantumWalk quantumWalk;
 
     //for norm array mode at various t values
-    double e = .75;
-    quantumWalk.generate_matrix_array(e);
-    outputfile << "t, norm array" << std::endl;
-    for (int i = 1; i <= quantumWalk.iterations; i = i*2) {
-        std::cout << "starting t->" << i << "...\t";
-        quantumWalk.step_simulation(i);
-        outputfile << i << ",";
-        quantumWalk.write_norm_array(outputfile, true);
-        std::cout << "finished with norm = " << quantumWalk.norm_sum() << std::endl;
-    }
-    quantumWalk.flush();
+//    double e = .75;
+//    quantumWalk.generate_matrix_array(e);
+//    outputfile << "t, norm array" << std::endl;
+//    for (int i = 1; i <= quantumWalk.iterations; i = i*2) {
+//        std::cout << "starting t->" << i << "...\t";
+//        quantumWalk.step_simulation(i);
+//        outputfile << i << ",";
+//        quantumWalk.write_norm_array(outputfile, true);
+//        std::cout << "finished with norm = " << quantumWalk.norm_sum() << std::endl;
+//    }
+//    quantumWalk.flush();
     // end norm array mode
 
-//    double e0 = 0;
-//    double de = .1;
-//    for(double e=e0; e<=1.; e+=de){
-//        std::cout << "run: episilon = " << e << std::endl;
+    double e0 = 0.5;
+    double de = .25;
+    outputfile << "t, norm array" << std::endl;
+    for(double e=e0; e<1.; e+=de){
+        std::cout << "run: episilon = " << e << std::endl;
+        quantumWalk.generate_matrix_array(e);
+        for (int i = 1; i <= quantumWalk.iterations; i = i*2) {
+            std::cout << "starting t->" << i << "...\t";
+            quantumWalk.step_simulation(i);
+            outputfile << i << ",";
+            quantumWalk.write_norm_array(outputfile, true);
+            std::cout << "finished with norm = " << quantumWalk.norm_sum() << std::endl;
+        }
 //        quantumWalk.generate_matrix_array(e);
 //        quantumWalk.run_simulation();
 //        if(e==e0) quantumWalk.write_time(outputfile, true);
 //        quantumWalk.write_mds(outputfile, false);
 //        outputfile << e << "," << quantumWalk.norm_sum() << std::endl;
-//        quantumWalk.flush();
-//    }
+        quantumWalk.flush();
+    }
     outputfile.close();
     return 0;
 }

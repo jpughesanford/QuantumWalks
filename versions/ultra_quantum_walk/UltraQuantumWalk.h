@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-const long iter = 32768; //1048576;
+const long iter = 1048576; //32768; //1048576;
 
 class UltraQuantumWalk {
 public:
