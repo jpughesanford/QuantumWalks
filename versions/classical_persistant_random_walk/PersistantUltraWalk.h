@@ -11,16 +11,17 @@
 #include <iostream>
 #include <fstream>
 
-const long iter = 32768; //1048576; //32768;
+const long iter = 65536; //1048576; //32768; //131072;
 
-class PersistantRandomWalk {
+class PersistantUltraWalk {
 public:
-    PersistantRandomWalk();
-    PersistantRandomWalk(double u, double l);
+    PersistantUltraWalk();
+    PersistantUltraWalk(double u, double l);
     unsigned long iterations = iter;
     void run_simulation(std::ofstream & file);
     void generate_statistics(std::ofstream & file);
     void generate_matrix_array();
+    void generate_ultrametric_matrix_array(double e);
 //    void generate_ultrametric_matrix_array(double e);
     void flush();
     std::vector<double> log_x;
@@ -35,7 +36,7 @@ private:
     double _time_step = 1;
     double _pos_step = 1;
     bool log_cond(double t);
-    double IC[2] = {1/sqrt(2),1/sqrt(2)};
+    double IC[2] = {1./2,1./2};
     static double A_r [4*(iter+1)];
     static double B_r [4*(iter+1)];
     static double mat [4*(iter+1)];

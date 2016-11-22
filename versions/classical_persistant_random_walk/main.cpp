@@ -1,4 +1,4 @@
-#include "PersistantRandomWalk.h"
+#include "PersistantUltraWalk.h"
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
@@ -46,7 +46,7 @@ int main() {
 
 //    //check runtime of simulation
 //    unsigned long long t0 = get_timestamp();
-//    PersistantRandomWalk classicWalk;
+//    PersistantUltraWalk classicWalk;
 //    classicWalk.generate_matrix_array();
 //    classicWalk.run_simulation();
 //    unsigned long long t1 = get_timestamp();
@@ -60,12 +60,15 @@ int main() {
 //    return 0;
 
 //    routine for logging
-    PersistantRandomWalk classicWalk(.5, .5);
-    for(int i=0; i<200; i++){
+    PersistantUltraWalk classicWalk(.5, .5);
+    e0 = .1;
+    de = .1;
+    ef = 1.;
+    for(double i=e0; i<ef; i+=de){
         std::cout << "run: " << i << std::endl;
-        classicWalk.generate_matrix_array();
+        classicWalk.generate_ultrametric_matrix_array(i);
         classicWalk.run_simulation(nfile);
-        if(i==0) classicWalk.write_time(mdsfile, true);
+        if(i==e0) classicWalk.write_time(mdsfile, true);
         classicWalk.write_mds(mdsfile, true);
         classicWalk.flush();
     }

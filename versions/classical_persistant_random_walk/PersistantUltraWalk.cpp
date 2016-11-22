@@ -3,19 +3,19 @@
 //
 
 #include <cstring>
-#include "PersistantRandomWalk.h"
+#include "PersistantUltraWalk.h"
 
-double PersistantRandomWalk::A_r[];
-double PersistantRandomWalk::B_r[];
-double PersistantRandomWalk::mat[];
+double PersistantUltraWalk::A_r[];
+double PersistantUltraWalk::B_r[];
+double PersistantUltraWalk::mat[];
 
-PersistantRandomWalk::PersistantRandomWalk(){
+PersistantUltraWalk::PersistantUltraWalk(){
     double* IC = this->IC;
     long iter = this->iterations;
     A_r[2*iter] = IC[0];
     A_r[2*iter+1] = IC[1];
 }
-PersistantRandomWalk::PersistantRandomWalk(double u, double l) {
+PersistantUltraWalk::PersistantUltraWalk(double u, double l) {
     double* IC = this->IC;
     long iter = this->iterations;
     IC[0] = A_r[2*iter] = u;
@@ -23,14 +23,35 @@ PersistantRandomWalk::PersistantRandomWalk(double u, double l) {
 }
 
 double powerOfTwo = 0;
-bool PersistantRandomWalk::log_cond(double t){
+bool PersistantUltraWalk::log_cond(double t){
     if(t >= pow(2, powerOfTwo)){
         powerOfTwo++;
         return true;
     } else return false;
 }
 
-void PersistantRandomWalk::generate_matrix_array(){
+void PersistantUltraWalk::generate_ultrametric_matrix_array(double e){
+    long iter = this->iterations;
+    long i;
+    double theta;
+    mat[2*iter  ] = 1;
+    mat[2*iter+1] = 0;
+    int m = int(log(iter)/log(2));
+    int j, k;
+    for(int i = 1; i<=m; i++){
+        int interval = int(pow(2, i-1));
+        double theta_i = pow(e, i);
+        j=0;
+        while(interval*(2*j+1)<=iter){
+            k = interval*(2*j+1);
+            mat[2*(iter+k)]   = mat[2*(iter-k)]   =    theta_i;
+            mat[2*(iter+k)+1] = mat[2*(iter-k)+1] = 1.-theta_i;
+            j++;
+        }
+    }
+}
+
+void PersistantUltraWalk::generate_matrix_array(){
     long iter = this->iterations;
     long i;
     double theta;
@@ -43,7 +64,7 @@ void PersistantRandomWalk::generate_matrix_array(){
     }
 }
 
-void PersistantRandomWalk::flush() {
+void PersistantUltraWalk::flush() {
     memset(A_r, 0, sizeof(A_r));
     memset(B_r, 0, sizeof(B_r));
     long iter = this->iterations;
@@ -56,7 +77,7 @@ void PersistantRandomWalk::flush() {
     this->log_t.clear();
 }
 
-void PersistantRandomWalk::run_simulation(std::ofstream & file) {
+void PersistantUltraWalk::run_simulation(std::ofstream & file) {
     long iter = this->iterations;
     long t = this->_t;
     double* mat = this->mat;
@@ -95,7 +116,7 @@ void PersistantRandomWalk::run_simulation(std::ofstream & file) {
     }
 }
 
-double PersistantRandomWalk::norm_sum(){
+double PersistantUltraWalk::norm_sum(){
     double sum = 0.0;
     double y,t;
     double c = 0.0;
@@ -118,7 +139,7 @@ double PersistantRandomWalk::norm_sum(){
     return sum;
 }
 
-void PersistantRandomWalk::generate_statistics(std::ofstream & file){
+void PersistantUltraWalk::generate_statistics(std::ofstream & file){
     double x = 0.0;
     double y,t;
     double c = 0.0;
@@ -130,6 +151,7 @@ void PersistantRandomWalk::generate_statistics(std::ofstream & file){
     double pos;
     long X=-T;
     long i;
+    file << T << ",";
     for(; X <= T; X+=2){
         i = 2*(iter+X);
         pos = X;
@@ -147,19 +169,19 @@ void PersistantRandomWalk::generate_statistics(std::ofstream & file){
     std::cout << "\tgenerating statistics\t(x2,t)->\t(" << x << ", " << T <<")"<< std::endl;
 }
 
-void PersistantRandomWalk::write_time(std::ofstream &file, bool endl){
+void PersistantUltraWalk::write_time(std::ofstream &file, bool endl){
     std::vector<double> t = this->log_t;
     for (std::vector<int>::size_type i = 0; i != t.size(); i++) file << t[i] << ",";
     if(endl) file << std::endl;
 }
 
-void PersistantRandomWalk::write_mds(std::ofstream &file, bool endl){
+void PersistantUltraWalk::write_mds(std::ofstream &file, bool endl){
     std::vector<double> x = this->log_x;
     for(std::vector<int>::size_type i = 0; i != x.size(); i++) file << x[i] << ",";
     if(endl) file << std::endl;
 }
 
-void PersistantRandomWalk::write_norm_array(std::ofstream &file, bool endl){
+void PersistantUltraWalk::write_norm_array(std::ofstream &file, bool endl){
     long T = this->_t;
     long iter = this->iterations;
     double norm;
@@ -174,7 +196,7 @@ void PersistantRandomWalk::write_norm_array(std::ofstream &file, bool endl){
     if(endl) file << std::endl;
 }
 
-void PersistantRandomWalk::print_norm_array(){
+void PersistantUltraWalk::print_norm_array(){
     long T = this->_t;
     long iter = this->iterations;
     double norm;
