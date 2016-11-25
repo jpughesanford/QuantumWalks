@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-const long iter = 65536; //1048576; //32768; //131072;
+const long iter = 131072; //1048576; //32768; //131072;
 
 class PersistantUltraWalk {
 public:

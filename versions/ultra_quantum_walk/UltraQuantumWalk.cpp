@@ -239,11 +239,22 @@ void UltraQuantumWalk::write_norm_array(std::ofstream &file, bool endl){
     double norm;
     double * src_r; double * src_i;
     long i;
+    file << T << ",";
+    bool hasSeenNonZero = false;
+    long bound = 1;
     if(T%2==0){src_r  = A_r; src_i  = A_i;} else { src_r  = B_r; src_i  = B_i;}
     for(long X=-T; X < (T+1); X+=2){
         i = 2*(iter+X);
         norm = (src_r[i]*src_r[i]+src_i[i]*src_i[i])+(src_r[i+1]*src_r[i+1]+src_i[i+1]*src_i[i+1]);
-        file << norm << ",";
+        if(!hasSeenNonZero){
+            if(norm!=0.) {
+                file << -X << ",";
+                bound = -X;
+                file << norm << ",";
+                hasSeenNonZero = true;
+            }
+        } else file << norm << ",";
+        if(X==bound) break;
     }
     if(endl) file << std::endl;
 }

@@ -152,12 +152,25 @@ void PersistantUltraWalk::generate_statistics(std::ofstream & file){
     long X=-T;
     long i;
     file << T << ",";
+
+    long bound = 1;
+    bool hasSeenNonZero = false;
+    bool stopWriting = false;
+
     for(; X <= T; X+=2){
         i = 2*(iter+X);
         pos = X;
         norm = src_r[i] + src_r[i+1];
         // Kahan Summation Algorithm: reduces rounding errors in low order bits
-        file << norm << ",";
+        if(!hasSeenNonZero){
+            if(norm!=0.) {
+                file << -X << ",";
+                bound = -X;
+                file << norm << ",";
+                hasSeenNonZero = true;
+            }
+        } else if(!stopWriting) file << norm << ",";
+        if(X==bound) stopWriting = true;
         y = (norm * pos * pos) - c;
         t = x + y;
         c = (t - x) - y;
