@@ -27,7 +27,6 @@ int main() {
     mdsfile << "description\t" << description << std::endl;
     nfile.open((filepath + filename + "_norm.csv").c_str());
     nfile << "description\t" << description << std::endl;
-    nfile << "header, t, norm array" << std::endl;
 
 //    //check runtime of simulation
 //    unsigned long long t0 = get_timestamp();
@@ -59,19 +58,31 @@ int main() {
 //    mdsfile.close();
 //    return 0;
 
-//    routine for logging
     PersistantUltraWalk classicWalk(.5, .5);
-    e0 = .1;
-    de = .1;
-    ef = 1.;
-    for(double i=e0; i<ef; i+=de){
-        std::cout << "run: " << i << std::endl;
-        classicWalk.generate_ultrametric_matrix_array(i);
-        classicWalk.run_simulation(nfile);
-        if(i==e0) classicWalk.write_time(mdsfile, true);
-        classicWalk.write_mds(mdsfile, true);
-        classicWalk.flush();
-    }
+    nfile << "t, first nonzero position, norm array" << std::endl;
+    double e = .7;
+    classicWalk.generate_ultrametric_matrix_array(e);
+    classicWalk.run_simulation(nfile);
+    classicWalk.write_time(mdsfile, true);
+    classicWalk.write_mds(mdsfile, true);
+    classicWalk.flush();
+    nfile.close();
     mdsfile.close();
+
+//    routine for logging
+//    PersistantUltraWalk classicWalk(.5, .5);
+//    double e0 = .1;
+//    double de = .1;
+//    double ef = 1.;
+//    for(double i=e0; i<ef; i+=de){
+//        std::cout << "run: " << i << std::endl;
+//        classicWalk.generate_ultrametric_matrix_array(i);
+//        classicWalk.run_simulation(nfile);
+//        if(i==e0) classicWalk.write_time(mdsfile, true);
+//        classicWalk.write_mds(mdsfile, true);
+//        classicWalk.flush();
+//    }
+//    nfile.close();
+//    mdsfile.close();
     return 0;
 }
